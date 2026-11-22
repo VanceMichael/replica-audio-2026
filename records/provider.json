@@ -6,7 +6,7 @@
         "body": [
           {
             "panel": "P",
-            "generation": "g1",
+            "generation": "A",
             "scan": "s1",
             "blocks": [
               "a",
@@ -30,7 +30,7 @@
         "body": [
           {
             "locale": "zh",
-            "generation": "g1",
+            "generation": "A",
             "config": "old-C1"
           }
         ]
@@ -42,7 +42,7 @@
         "body": [
           {
             "panel": "P",
-            "generation": "g2",
+            "generation": "B",
             "scan": "s2",
             "blocks": [
               "a",
@@ -100,9 +100,22 @@
         "method": "POST",
         "payload": {
           "locale": "zh",
-          "generation": "g2"
+          "generation": "B"
         },
         "status": 201
+      },
+      {
+        "path": "/player/activate",
+        "body": {
+          "state": "accepted",
+          "ticket": "new-zh"
+        },
+        "method": "POST",
+        "payload": {
+          "ticket": "new-zh"
+        },
+        "status": 202,
+        "next": "new-sound"
       }
     ],
     "new-sound": [
@@ -111,16 +124,40 @@
         "body": [
           {
             "locale": "zh",
-            "generation": "g2",
+            "generation": "B",
             "config": "new-C1"
           },
           {
-            "locale": "en",
-            "generation": "g1",
+            "locale": "yue",
+            "generation": "A",
             "config": "old-C2",
             "blocked": true
           }
         ]
+      },
+      {
+        "path": "/touch/sessions",
+        "body": [
+          {
+            "panel": "P",
+            "generation": "B",
+            "scan": "s2",
+            "blocks": [
+              "a",
+              "b"
+            ],
+            "sealed": true
+          }
+        ]
+      },
+      {
+        "path": "/touch/blocks",
+        "body": null,
+        "file": "panel-3.dat",
+        "query": {
+          "scan": "s2",
+          "block": "b"
+        }
       }
     ]
   },

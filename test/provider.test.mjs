@@ -21,7 +21,7 @@ test('设备代改变使旧扫描尾部消失且播放器拒绝旧备用票', as
   const scan = await (await fetch(root + '/touch/sessions')).json()
   assert.equal(scan[0].sealed, true)
   const next = await fetch(root + '/touch/blocks?scan=s2&block=b')
-  assert.equal(Buffer.from(await next.arrayBuffer()).readUInt16LE(5), 16)
+  assert.equal(Buffer.from(await next.arrayBuffer()).readUInt16LE(5), 12)
   assert.equal((await fetch(root + '/touch/blocks?scan=s1&block=b')).status, 410)
   assert.equal((await post(root, '/player/activate', { ticket: 'old-zh' })).status, 409)
 })
