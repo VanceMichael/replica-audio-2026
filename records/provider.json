@@ -1,0 +1,128 @@
+{
+  "stages": {
+    "mounted": [
+      {
+        "path": "/touch/sessions",
+        "body": [
+          {
+            "panel": "P",
+            "generation": "g1",
+            "scan": "s1",
+            "blocks": [
+              "a",
+              "b"
+            ],
+            "sealed": false
+          }
+        ]
+      },
+      {
+        "path": "/touch/blocks",
+        "body": null,
+        "file": "panel-1.dat",
+        "query": {
+          "scan": "s1",
+          "block": "a"
+        }
+      },
+      {
+        "path": "/player/active",
+        "body": [
+          {
+            "locale": "zh",
+            "generation": "g1",
+            "config": "old-C1"
+          }
+        ]
+      }
+    ],
+    "reversed": [
+      {
+        "path": "/touch/sessions",
+        "body": [
+          {
+            "panel": "P",
+            "generation": "g2",
+            "scan": "s2",
+            "blocks": [
+              "a",
+              "b"
+            ],
+            "sealed": true
+          }
+        ]
+      },
+      {
+        "path": "/touch/blocks",
+        "body": null,
+        "file": "panel-2.dat",
+        "query": {
+          "scan": "s2",
+          "block": "a"
+        }
+      },
+      {
+        "path": "/touch/blocks",
+        "body": null,
+        "file": "panel-3.dat",
+        "query": {
+          "scan": "s2",
+          "block": "b"
+        }
+      },
+      {
+        "path": "/touch/blocks",
+        "body": {
+          "error": "安装代已结束"
+        },
+        "query": {
+          "scan": "s1",
+          "block": "b"
+        },
+        "status": 410
+      },
+      {
+        "path": "/player/activate",
+        "body": {
+          "error": "备选与当前安装代不符"
+        },
+        "method": "POST",
+        "payload": {
+          "ticket": "old-zh"
+        },
+        "status": 409
+      },
+      {
+        "path": "/player/stage",
+        "body": {
+          "ticket": "new-zh"
+        },
+        "method": "POST",
+        "payload": {
+          "locale": "zh",
+          "generation": "g2"
+        },
+        "status": 201
+      }
+    ],
+    "new-sound": [
+      {
+        "path": "/player/active",
+        "body": [
+          {
+            "locale": "zh",
+            "generation": "g2",
+            "config": "new-C1"
+          },
+          {
+            "locale": "en",
+            "generation": "g1",
+            "config": "old-C2",
+            "blocked": true
+          }
+        ]
+      }
+    ]
+  },
+  "common": []
+}
