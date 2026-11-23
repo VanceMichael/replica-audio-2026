@@ -11,3 +11,25 @@ npm run source
 两版业务记录和取件字段见 [资料格式](source/formats.md)。`POST /control?edition=r2` 模拟业务方更换当期资料，切回 `r1` 可重新查看初始来源。
 
 本地演练还提供单独的外部接口。用 `npm run provider` 启动，默认地址为 `http://127.0.0.1:8701`，可用 `PROVIDER_PORT` 调整。来源语义、操作回执和演练档见[外部接口](source/provider.md)。
+
+## 布展校准工具
+
+换展件或重新摆板后，用 `tool/exhibit.mjs` 重采和校准（状态目录默认为 `var/`，可用 `--state` 调整）：
+
+```sh
+# 1. 对一块板发起实际扫描采集：分批块、重复读数合并、丢尾段与跨代拒绝（410）记录在案
+node tool/exhibit.mjs collect --provider http://127.0.0.1:8701 --panel P
+
+# 2. 校准：按实际朝向换算实体坐标，给出可用触点范围、待复核读数、
+#    需重做的手势，以及各语种可开情况（不借用其他展件或旧资料版的音段）
+node tool/exhibit.mjs calibrate --source http://127.0.0.1:8700 --replica K
+
+# 3. 逐语种先装备用组合再确认活动组合；现场代已换时旧备用票停用，单一语种失败不影响其余
+node tool/exhibit.mjs apply --provider http://127.0.0.1:8701
+
+# 4. 播放实况核对：当前生效的展件/手势/语种、支撑配置的扫描与许可，
+#    错区与停滞触发保留事实并给出处置，快照追加到 audit-log.jsonl
+node tool/exhibit.mjs status --source http://127.0.0.1:8700 --provider http://127.0.0.1:8701
+```
+
+校准规则：方向 `R` 时实体坐标 = 位宽 − 面板坐标，`L` 时一致。读数落在只读区、或仍可能同时属于两个相交区时保留待复核；相交区地址需看到不同手势的两条读数分别落在允许的单区部分，才有区分证据。配置按展件商定版本在当前资料版的字幕选段，发布窗口切换后旧音段不沿用。
